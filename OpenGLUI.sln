@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLUI", "OpenGLUI\OpenGLUI.vcxproj", "{3E79F494-21E6-452A-81B6-07066AC15FCF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLUI_Sample", "OpenGLUI_Sample\OpenGLUI_Sample.vcxproj", "{7D00B167-EAEE-46EB-8618-A206BF6B544C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3E79F494-21E6-452A-81B6-07066AC15FCF} = {3E79F494-21E6-452A-81B6-07066AC15FCF}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E79F494-21E6-452A-81B6-07066AC15FCF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3E79F494-21E6-452A-81B6-07066AC15FCF}.Debug|Win32.Build.0 = Debug|Win32
+		{3E79F494-21E6-452A-81B6-07066AC15FCF}.Release|Win32.ActiveCfg = Release|Win32
+		{3E79F494-21E6-452A-81B6-07066AC15FCF}.Release|Win32.Build.0 = Release|Win32
+		{7D00B167-EAEE-46EB-8618-A206BF6B544C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D00B167-EAEE-46EB-8618-A206BF6B544C}.Debug|Win32.Build.0 = Debug|Win32
+		{7D00B167-EAEE-46EB-8618-A206BF6B544C}.Release|Win32.ActiveCfg = Release|Win32
+		{7D00B167-EAEE-46EB-8618-A206BF6B544C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal
