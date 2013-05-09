@@ -1,11 +1,17 @@
 #include "Gui.h"
 
+void glui::GUI::_ClearFocus()
+{
+	if(m_ControlWithFocus._Get() != nullptr)
+		m_ControlWithFocus._Get()->setFocus(false);
+	m_ControlWithFocus.reset();
+}
 
-oglui::GUI::GUI(void)
+glui::GUI::GUI(void)
 {
 }
 
 
-oglui::GUI::~GUI(void)
+glui::GUI::~GUI(void)
 {
 }
