@@ -10,14 +10,18 @@ namespace glui
 	class GUI
 	{
 	protected:
-		int									m_ScreenWidth;
-		int									m_ScreenHeight;
+		int					m_ScreenWidth;
+		int					m_ScreenHeight;
 
-		std::set<std::shared_ptr<Control>>	m_Controls;
-		std::weak_ptr<Control>				m_ControlWithFocus;
+		std::set<Control*>	m_Controls;
+		Control*			m_ControlWithFocus;
 
 		void _ClearFocus();
 	public:
+		void Draw();
+
+		void AddControl(Control* control);
+
 		GUI(void);
 		~GUI(void);
 	};
