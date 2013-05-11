@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../stdafx.h"
+
 #include <set>
 #include <memory>
 
@@ -13,6 +15,10 @@ namespace glui
 		int					m_ScreenWidth;
 		int					m_ScreenHeight;
 
+		GLuint				m_VertexShader;
+		GLuint				m_FragmentShader;
+		GLuint				m_Program;
+
 		std::set<Control*>	m_Controls;
 		Control*			m_ControlWithFocus;
 
@@ -22,7 +28,7 @@ namespace glui
 
 		void AddControl(Control* control);
 
-		GUI(void);
-		~GUI(void);
+		GUI();
+		~GUI();
 	};
 }

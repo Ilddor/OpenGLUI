@@ -3,6 +3,8 @@
 #include <SFML\Window.hpp>
 //#include <gl\glew.h>
 
+#include <iostream>
+
 int main()
 {
 	sf::Window window(sf::VideoMode(800, 600), "OpenGLUI sample", sf::Style::Default, sf::ContextSettings(24, 0, 0, 3, 3));
@@ -11,6 +13,13 @@ int main()
 
 	glui::GUI gui;
 
+	glViewport(0,0,800,600);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, 800, 600, 0, -100, 100);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
 	gui.AddControl(new glui::Button());
 
 	sf::Event event;
@@ -18,9 +27,19 @@ int main()
 	{
 		while(window.pollEvent(event))
 		{
-			if(event.type = sf::Event::Closed)
+			switch(event.type)
 			{
+			case sf::Event::Closed :
 				window.close();
+				break;
+			case sf::Event::Resized :
+				glViewport(0,0,event.size.width,event.size.height);
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glOrtho(0, 800, 600, 0, -100, 100);
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
+				break;
 			}
 		}
 
