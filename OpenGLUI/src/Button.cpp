@@ -2,12 +2,83 @@
 
 #include <string>
 #include <iostream>
+#include <array>
+
+void glui::Button::_setVBO()
+{
+	std::array<GLfloat, 8> verticesBackground = {
+		m_Position.X, m_Position.Y,
+		m_Position.X+m_Size.X, m_Position.Y,
+		m_Position.X+m_Size.X, m_Position.Y+m_Size.Y,
+		m_Position.X, m_Position.Y+m_Size.Y
+	};
+
+	std::array<GLfloat, 12> colors = {
+		1.f, 0.f, 0.f,
+		0.f, 1.f, 0.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 0.f
+	};
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*verticesBackground.size(), verticesBackground.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_colors);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*colors.size(), colors.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 
 void glui::Button::Draw()
 {
 	glBindVertexArray(m_VAOID);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_QUADS, 0, 4);
+}
+
+void glui::Button::setPosition(GLfloat x, GLfloat y)
+{
+	m_Position.X = x;
+	m_Position.Y = y;
+
+	_setVBO();
+}
+
+void glui::Button::setPosition(Vector2<GLfloat> position)
+{
+	m_Position = position;
+
+	_setVBO();
+}
+
+void glui::Button::setSize(GLfloat width, GLfloat height)
+{
+	m_Size.X = width;
+	m_Size.Y = height;
+
+	_setVBO();
+}
+
+void glui::Button::setSize(Vector2<GLfloat> size)
+{
+	m_Size = size;
+
+	_setVBO();
+}
+
+glui::Vector2<GLfloat> glui::Button::getPosition()
+{
+	return m_Position;
+}
+
+glui::Vector2<GLfloat> glui::Button::getSize()
+{
+	return m_Size;
 }
 
 glui::Button::Button()
@@ -24,24 +95,11 @@ glui::Button::Button()
 	glGenBuffers(1, &m_vertices);
 	glGenBuffers(1, &m_colors);
 
-	GLfloat tmp[9] = {-1.f,0.f,0.f, 1.f,0.f,0.f, 0.f,1.f,0.f};
-	GLfloat color[9] = {1.f,0.f,0.f, 0.f,0.f,1.f, 0.f,1.f,0.f};
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*9, tmp, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_colors);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*9, color, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	_setVBO();
 }
 
 
-glui::Button::~Button(void)
+glui::Button::~Button()
 {
 	glDeleteBuffers(1, &m_vertices);
 	glDeleteBuffers(1, &m_colors);

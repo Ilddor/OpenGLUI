@@ -14,11 +14,13 @@
     <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Control.h" />
     <ClInclude Include="include\Gui.h" />
+    <ClInclude Include="include\Vector2.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Gui.cpp" />
+    <ClCompile Include="src\Vector2.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -20,7 +20,11 @@ int main()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gui.AddControl(new glui::Button());
+	glui::Button button;
+	button.setPosition(0.f, 0.f);
+	button.setSize(0.5f, 0.5f);
+
+	gui.AddControl(&button);
 
 	sf::Event event;
 	while(window.isOpen())

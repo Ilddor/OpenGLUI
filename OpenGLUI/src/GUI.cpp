@@ -33,11 +33,11 @@ glui::GUI::GUI()
 	std::string vert = 
     "#version 330 core"
     NL "precision mediump float;"
-    NL "layout(location = 0) in vec3 in_position;"
+    NL "layout(location = 0) in vec2 in_position;"
 	NL "layout(location = 1) in vec3 in_color;"
 	NL "out vec3 Color;"
     NL "void main() {"
-    NL "    gl_Position = vec4(in_position, 1.0);"
+    NL "    gl_Position = vec4(in_position, 0.0, 1.0);"
 	NL "	Color = in_color;"
     NL "}" NL;
 

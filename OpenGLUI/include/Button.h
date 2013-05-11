@@ -1,6 +1,6 @@
 #pragma once
-#include "control.h"
 #include "..\stdafx.h"
+#include "Control.h"
 
 namespace glui
 {
@@ -11,10 +11,20 @@ namespace glui
 		GLuint m_VAOID;
 		GLuint m_vertices;
 		GLuint m_colors;
+
+		void _setVBO();
 	public:
 		void Draw();
 
-		Button(void);
-		~Button(void);
+		void setPosition(GLfloat x,GLfloat y);
+		void setPosition(Vector2<GLfloat> position);
+		void setSize(GLfloat width, GLfloat height);
+		void setSize(Vector2<GLfloat> size);
+
+		Vector2<GLfloat> getPosition();
+		Vector2<GLfloat> getSize();
+
+		Button();
+		~Button();
 	};
 }
