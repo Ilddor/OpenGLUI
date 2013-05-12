@@ -22,11 +22,19 @@ namespace glui
 		std::set<Control*>	m_Controls;
 		Control*			m_ControlWithFocus;
 
+		glm::mat4			m_Projection;
+		glm::mat4			m_View;
+		GLint proj;
+		GLint view;
+
 		void _ClearFocus();
 	public:
 		void Draw();
 
 		void AddControl(Control* control);
+
+		void setProjectionMatrix(glm::mat4 projection);
+		void setViewMatrix(glm::mat4 view);
 
 		GUI();
 		~GUI();

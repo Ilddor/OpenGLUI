@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(glew_include);D:\Informatyka\OpenGLUI\OpenGLUI\include;$(SFML_include);$(IncludePath)</IncludePath>
+    <IncludePath>$(glm);$(glew_include);D:\Informatyka\OpenGLUI\OpenGLUI\include;$(SFML_include);$(IncludePath)</IncludePath>
     <LibraryPath>$(glew_lib);D:\Informatyka\OpenGLUI\Debug;$(SFML_lib);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

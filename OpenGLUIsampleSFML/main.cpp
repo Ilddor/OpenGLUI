@@ -1,7 +1,7 @@
 #include <Gui.h>
 #include <Button.h>
 #include <SFML\Window.hpp>
-//#include <gl\glew.h>
+#include <gtc\matrix_transform.hpp>
 
 #include <iostream>
 
@@ -9,20 +9,25 @@ int main()
 {
 	sf::Window window(sf::VideoMode(800, 600), "OpenGLUI sample", sf::Style::Default, sf::ContextSettings(24, 0, 0, 3, 3));
 
-	//glewInit();
-
 	glui::GUI gui;
 
-	glViewport(0,0,800,600);
+	/*glViewport(0,0,800,600);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, 800, 600, 0, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glLoadIdentity();*/
+
+	glm::mat4 projection;
+	glm::mat4 view = glm::mat4();
+
+	projection = glm::ortho(0, 800, 600, 0);
+	gui.setProjectionMatrix(projection);
+	gui.setViewMatrix(view);
 
 	glui::Button button;
 	button.setPosition(0.f, 0.f);
-	button.setSize(0.5f, 0.5f);
+	button.setSize(200.f, 50.f);
 
 	gui.AddControl(&button);
 
@@ -37,12 +42,12 @@ int main()
 				window.close();
 				break;
 			case sf::Event::Resized :
-				glViewport(0,0,event.size.width,event.size.height);
+				/*glViewport(0,0,event.size.width,event.size.height);
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
 				glOrtho(0, 800, 600, 0, -100, 100);
 				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
+				glLoadIdentity();*/
 				break;
 			}
 		}

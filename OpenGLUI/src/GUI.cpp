@@ -2,6 +2,8 @@
 #include "..\stdafx.h"
 
 #include <iostream>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
 
 #define NL "\n"
 
@@ -26,6 +28,16 @@ void glui::GUI::AddControl(Control* control)
 	m_Controls.insert(control);
 }
 
+void glui::GUI::setProjectionMatrix(glm::mat4 projection)
+{
+	m_Projection = projection;
+}
+
+void glui::GUI::setViewMatrix(glm::mat4 view)
+{
+	m_View = view;
+}
+
 glui::GUI::GUI()
 {
 	glewInit();
@@ -35,9 +47,10 @@ glui::GUI::GUI()
     NL "precision mediump float;"
     NL "layout(location = 0) in vec2 in_position;"
 	NL "layout(location = 1) in vec3 in_color;"
+	NL "uniform mat4 Projection, View;"
 	NL "out vec3 Color;"
     NL "void main() {"
-    NL "    gl_Position = vec4(in_position, 0.0, 1.0);"
+    NL "    gl_Position = Projection * View * vec4(in_position, 0.0, 1.0);"
 	NL "	Color = in_color;"
     NL "}" NL;
 
@@ -99,6 +112,13 @@ glui::GUI::GUI()
 		std::cerr << "Program linking error: " << linker_log << std::endl;
 		delete[] linker_log;
 	}
+
+	proj = glGetUniformLocation(m_Program, "Projection");
+	glUseProgram(m_Program);
+	glUniformMatrix4fv(proj, 1, GL_FALSE, glm::value_ptr(m_Projection));
+
+	view = glGetUniformLocation(m_Program, "View");
+	glUniformMatrix4fv(view, 1, GL_FALSE, glm::value_ptr(m_View));
 }
 
 
