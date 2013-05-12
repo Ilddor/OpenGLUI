@@ -31,11 +31,15 @@ void glui::GUI::AddControl(Control* control)
 void glui::GUI::setProjectionMatrix(glm::mat4 projection)
 {
 	m_Projection = projection;
+	glUseProgram(m_Program);
+	glUniformMatrix4fv(proj, 1, GL_FALSE, glm::value_ptr(m_Projection));
 }
 
 void glui::GUI::setViewMatrix(glm::mat4 view)
 {
 	m_View = view;
+	glUseProgram(m_Program);
+	glUniformMatrix4fv(this->view, 1, GL_FALSE, glm::value_ptr(m_View));
 }
 
 glui::GUI::GUI()
@@ -113,11 +117,13 @@ glui::GUI::GUI()
 		delete[] linker_log;
 	}
 
-	proj = glGetUniformLocation(m_Program, "Projection");
 	glUseProgram(m_Program);
+	proj = glGetUniformLocation(m_Program, "Projection");
+	std::cout << proj << std::endl;
 	glUniformMatrix4fv(proj, 1, GL_FALSE, glm::value_ptr(m_Projection));
 
 	view = glGetUniformLocation(m_Program, "View");
+	std::cout << view << std::endl;
 	glUniformMatrix4fv(view, 1, GL_FALSE, glm::value_ptr(m_View));
 }
 
