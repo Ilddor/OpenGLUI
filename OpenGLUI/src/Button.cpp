@@ -14,10 +14,10 @@ void glui::Button::_setVBO()
 	};
 
 	std::array<GLfloat, 12> colors = {
-		1.f, 0.f, 0.f,
-		0.f, 1.f, 0.f,
-		0.f, 0.f, 1.f,
-		1.f, 0.f, 1.f
+		0.5f, 0.5f, 0.5f,
+		0.5f, 0.5f, 0.5f,
+		0.3f, 0.3f, 0.3f,
+		0.3f, 0.3f, 0.3f
 	};
 
 
@@ -58,47 +58,24 @@ void glui::Button::Draw()
 
 void glui::Button::setFunction(std::function<void()> function)
 {
-	std::swap(m_function, function);
+	std::swap(m_Function, function);
 }
 
-void glui::Button::setPosition(GLfloat x, GLfloat y)
+bool glui::Button::MousePress(int x, int y)
 {
-	m_Position.X = x;
-	m_Position.Y = y;
-
-	_setVBO();
+	if(_isPointIn(Vector2<GLfloat>(x,y)))
+	{
+		if(!m_Function._Empty())
+			m_Function();
+		return true;
+	}
+	else
+		return false;
 }
 
-void glui::Button::setPosition(Vector2<GLfloat> position)
+bool glui::Button::MouseRelease(int x, int y)
 {
-	m_Position = position;
-
-	_setVBO();
-}
-
-void glui::Button::setSize(GLfloat width, GLfloat height)
-{
-	m_Size.X = width;
-	m_Size.Y = height;
-
-	_setVBO();
-}
-
-void glui::Button::setSize(Vector2<GLfloat> size)
-{
-	m_Size = size;
-
-	_setVBO();
-}
-
-glui::Vector2<GLfloat> glui::Button::getPosition()
-{
-	return m_Position;
-}
-
-glui::Vector2<GLfloat> glui::Button::getSize()
-{
-	return m_Size;
+	return false;
 }
 
 glui::Button::Button()

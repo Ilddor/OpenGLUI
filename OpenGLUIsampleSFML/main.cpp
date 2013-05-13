@@ -21,6 +21,9 @@ int main()
 	glui::Button button;
 	button.setPosition(200.f, 100.f);
 	button.setSize(200.f, 50.f);
+	button.setFunction([&](){
+		button.setPosition(10.f, 10.f);
+	});
 
 	gui.AddControl(&button);
 
