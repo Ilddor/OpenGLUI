@@ -14,10 +14,10 @@ void glui::Button::_setVBO()
 	};
 
 	std::array<GLfloat, 12> colors = {
-		0.4f, 0.4f, 0.4f,
-		0.4f, 0.4f, 0.4f,
-		0.2f, 0.2f, 0.2f,
-		0.2f, 0.2f, 0.2f
+		1.f, 0.f, 0.f,
+		0.f, 1.f, 0.f,
+		0.f, 0.f, 1.f,
+		1.f, 0.f, 1.f
 	};
 
 
@@ -54,6 +54,11 @@ void glui::Button::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);*/
 
 	//glDrawArrays(GL_LINE_LOOP, 0, 4);
+}
+
+void glui::Button::setFunction(std::function<void()> function)
+{
+	std::swap(m_function, function);
 }
 
 void glui::Button::setPosition(GLfloat x, GLfloat y)
