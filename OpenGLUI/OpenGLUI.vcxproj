@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Control.h" />
+    <ClInclude Include="include\Font.h" />
     <ClInclude Include="include\Gui.h" />
     <ClInclude Include="include\Vector2.h" />
     <ClInclude Include="Misc.hpp" />
@@ -20,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\Gui.cpp" />
     <ClCompile Include="src\Vector2.cpp" />
     <ClCompile Include="stdafx.cpp" />
