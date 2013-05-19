@@ -3,6 +3,8 @@
 #include <functional>
 #include "Control.h"
 
+#include "Font.h"
+
 namespace glui
 {
 	class Button :
@@ -12,10 +14,13 @@ namespace glui
 		GLuint m_VAOID;
 		GLuint m_vertices;
 		GLuint m_colors;
+		GLuint m_tex;
 
 		std::function<void()> m_Function;
 
 		void _setVBO();
+
+		Font font;
 	public:
 		void Draw();
 

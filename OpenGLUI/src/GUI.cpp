@@ -16,11 +16,15 @@ void glui::GUI::_ClearFocus()
 
 void glui::GUI::Draw()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_ALPHA_TEST);
 	glUseProgram(m_Program);
 	for(auto it: m_Controls)
 	{
 		it->Draw();
 	}
+	glUseProgram(0);
 }
 
 void glui::GUI::AddControl(Control* control)
@@ -42,6 +46,15 @@ void glui::GUI::setViewMatrix(glm::mat4 view)
 	glUniformMatrix4fv(this->view, 1, GL_FALSE, glm::value_ptr(m_View));
 }
 
+void glui::GUI::MousePress(int x, int y)
+{
+	for(auto it: m_Controls)
+	{
+		if(it->MousePress(x, y))
+			break;
+	}
+}
+
 glui::GUI::GUI()
 {
 	glewInit();
@@ -51,9 +64,12 @@ glui::GUI::GUI()
     NL "precision mediump float;"
     NL "layout(location = 0) in vec2 in_position;"
 	NL "layout(location = 1) in vec3 in_color;"
+	NL "layout(location = 2) in vec2 in_tex_coord;"
 	NL "uniform mat4 Projection, View;"
 	NL "out vec3 Color;"
+	NL "out vec2 tex_coord;"
     NL "void main() {"
+	NL "	tex_coord = in_tex_coord;"
     NL "    gl_Position = Projection * View * vec4(in_position, 0.0, 1.0);"
 	NL "	Color = in_color;"
     NL "}" NL;
@@ -62,9 +78,12 @@ glui::GUI::GUI()
     "#version 330 core"
     NL "precision mediump float;"
 	NL "in vec3 Color;"
+	NL "in vec2 tex_coord;"
+	NL "uniform sampler2D color_texture;"
     NL "out vec4 out_Color;"
     NL "void main() {"
-    NL "    out_Color = vec4(Color, 1.0);"
+    //NL "    out_Color = vec4(Color, 1.0);"
+	NL "	out_Color = texture(color_texture, tex_coord);"
     NL "}" NL;
 
 	m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -118,6 +137,7 @@ glui::GUI::GUI()
 	}
 
 	glUseProgram(m_Program);
+
 	proj = glGetUniformLocation(m_Program, "Projection");
 	std::cout << proj << std::endl;
 	glUniformMatrix4fv(proj, 1, GL_FALSE, glm::value_ptr(m_Projection));
@@ -125,6 +145,11 @@ glui::GUI::GUI()
 	view = glGetUniformLocation(m_Program, "View");
 	std::cout << view << std::endl;
 	glUniformMatrix4fv(view, 1, GL_FALSE, glm::value_ptr(m_View));
+
+	glActiveTexture(GL_TEXTURE0);
+	GLint tex_location = glGetUniformLocation(m_Program, "color_texture");
+	std::cout << tex_location << std::endl;
+	glUniform1i(tex_location, 0);
 }
 
 

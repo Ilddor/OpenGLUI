@@ -19,8 +19,8 @@ int main()
 	gui.setViewMatrix(view);
 
 	glui::Button button;
-	button.setPosition(200.f, 100.f);
-	button.setSize(200.f, 50.f);
+	button.setPosition(100.f, 50.f);
+	button.setSize(600.f, 500.f);
 	button.setFunction([&](){
 		button.setPosition(10.f, 10.f);
 	});
@@ -39,8 +39,23 @@ int main()
 				break;
 			case sf::Event::Resized :
 				break;
+			case sf::Event::MouseButtonPressed :
+				gui.MousePress(event.mouseButton.x, event.mouseButton.y);
+				break;
 			}
 		}
+		glClearColor(0.f,0.f,0.f,1.f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER);
+
+		/*glBegin(GL_QUADS);
+			glColor3f(1.f,1.f,1.f);
+			glVertex3f(1.f,1.f,0.f);
+			glVertex3f(1.f,-1.f,0.f);
+			glVertex3f(-1.f,-1.f,0.f);
+			glVertex3f(-1.f,1.f,0.f);
+		glEnd();*/
+
+		glFlush();
 
 		gui.Draw();
 

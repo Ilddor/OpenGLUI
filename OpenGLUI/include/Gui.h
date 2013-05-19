@@ -36,6 +36,8 @@ namespace glui
 		void setProjectionMatrix(glm::mat4 projection);
 		void setViewMatrix(glm::mat4 view);
 
+		void MousePress(int x, int y);
+
 		GUI();
 		~GUI();
 	};

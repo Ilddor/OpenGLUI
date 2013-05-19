@@ -20,6 +20,13 @@ void glui::Button::_setVBO()
 		0.3f, 0.3f, 0.3f
 	};
 
+	std::array<GLfloat, 8> tex_coords = {
+		0.f, 0.f,
+		1.f, 0.f,
+		1.f, 1.f,
+		0.f, 1.f
+	};
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*verticesBackground.size(), verticesBackground.data(), GL_STATIC_DRAW);
@@ -31,6 +38,11 @@ void glui::Button::_setVBO()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	glBindBuffer(GL_ARRAY_BUFFER, m_tex);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*tex_coords.size(), tex_coords.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -39,6 +51,7 @@ void glui::Button::Draw()
 	glBindVertexArray(m_VAOID);
 
 	//_setVBO();
+	font.draw();
 
 	glDrawArrays(GL_QUADS, 0, 4);
 
@@ -58,7 +71,7 @@ void glui::Button::Draw()
 
 void glui::Button::setFunction(std::function<void()> function)
 {
-	std::swap(m_Function, function);
+	m_Function = function;
 }
 
 bool glui::Button::MousePress(int x, int y)
@@ -83,6 +96,7 @@ glui::Button::Button()
 	m_VAOID = 0;
 	m_vertices = 0;
 	m_colors = 0;
+	m_tex = 0;
 
 	GLuint cos = 0;
 
@@ -91,6 +105,9 @@ glui::Button::Button()
 
 	glGenBuffers(1, &m_vertices);
 	glGenBuffers(1, &m_colors);
+	glGenBuffers(1, &m_tex);
+
+	font.loadFromFile("arial.ttf");
 
 	_setVBO();
 }
@@ -100,5 +117,6 @@ glui::Button::~Button()
 {
 	glDeleteBuffers(1, &m_vertices);
 	glDeleteBuffers(1, &m_colors);
+	glDeleteBuffers(1, &m_tex);
 	glDeleteVertexArrays(1, &m_VAOID);
 }

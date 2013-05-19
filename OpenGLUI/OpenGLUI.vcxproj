@@ -57,8 +57,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(glm);$(glew_include);$(ProjectDir)\include;$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>D:\Biblioteki\freetype2\include\freetype2;D:\Biblioteki\freetype2\include;$(glm);$(glew_include);$(ProjectDir)\include;$(ProjectDir);$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)\src;$(SourcePath)</SourcePath>
+    <LibraryPath>D:\Biblioteki\freetype2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
