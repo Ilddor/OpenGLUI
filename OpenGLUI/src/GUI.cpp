@@ -82,8 +82,10 @@ glui::GUI::GUI()
 	NL "uniform sampler2D color_texture;"
     NL "out vec4 out_Color;"
     NL "void main() {"
-    //NL "    out_Color = vec4(Color, 1.0);"
-	NL "	out_Color = texture(color_texture, tex_coord);"
+	//NL "	if(tex_coord.x)"
+	NL "		out_Color = texture(color_texture, tex_coord);"
+	//NL "	else"
+	//NL "		out_Color = vec4(Color, 1.0);"
     NL "}" NL;
 
 	m_VertexShader = glCreateShader(GL_VERTEX_SHADER);

@@ -20,7 +20,7 @@ int main()
 
 	glui::Button button;
 	button.setPosition(100.f, 50.f);
-	button.setSize(600.f, 500.f);
+	button.setSize(30.f, 60.f);
 	button.setFunction([&](){
 		button.setPosition(10.f, 10.f);
 	});
@@ -44,17 +44,14 @@ int main()
 				break;
 			}
 		}
-		glClearColor(0.f,0.f,0.f,1.f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER);
 
-		/*glBegin(GL_QUADS);
-			glColor3f(1.f,1.f,1.f);
+		glBegin(GL_QUADS);
+			glColor3f(0.f,0.f,0.f);
 			glVertex3f(1.f,1.f,0.f);
 			glVertex3f(1.f,-1.f,0.f);
 			glVertex3f(-1.f,-1.f,0.f);
 			glVertex3f(-1.f,1.f,0.f);
-		glEnd();*/
-
+		glEnd();	//don't know why glClear doesn't work so i use this to clear buffer:P
 		glFlush();
 
 		gui.Draw();

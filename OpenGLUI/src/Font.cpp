@@ -1,18 +1,67 @@
 #include "Font.h"
 
 #include <iostream>
+#include <vector>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 #include FT_OUTLINE_H
 #include FT_BITMAP_H
 
-void glui::Font::draw()
+glui::Font::Page::Glyph glui::Font::getGlyph(unsigned long character)
 {
-	FT_Face face = static_cast<FT_Face>(m_Face);
-	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_Tex);
+	Page::Glyph glyph;
+
+	auto it = m_Pages.find(m_Size)->second.m_Glyphs.find(character);
+	if(it != m_Pages.find(m_Size)->second.m_Glyphs.end())
+		return it->second;
+	else
+	{
+		FT_UInt glyph_index;
+		FT_Face face = static_cast<FT_Face>(m_Face);
+		glyph_index = FT_Get_Char_Index(face, character);
+		if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) != 0)
+			std::cerr << "blah error" << std::endl;
+		if(FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL) != 0)
+			std::cerr << "blah inny blad" << std::endl;
+
+		glGenTextures(1, &glyph.m_Texture);
+		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
+
+		if(face->glyph->bitmap.width == 0)
+			glyph.m_Width = face->glyph->metrics.horiAdvance/64;
+		else
+			glyph.m_Width = face->glyph->bitmap.width;
+		//unsigned char* bitmapa = new unsigned char[120*face->glyph->bitmap.width*4];
+		std::vector<unsigned char> bitmapa;
+		bitmapa.resize(60*face->glyph->bitmap.width*4, 0);
+		//memset(bitmapa, 0, sizeof(unsigned char)*120*face->glyph->bitmap.width*4);
+
+		if(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY)
+		{
+			for(int y = 54-(face->glyph->metrics.horiBearingY/64); y < (54-(face->glyph->metrics.horiBearingY/64))+face->glyph->bitmap.rows; ++y)
+			{
+				for(int x = 0; x < face->glyph->bitmap.width; ++x)
+				{
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+0] = 200;
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+1] = 200;
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+2] = 200;
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+3] = face->glyph->bitmap.buffer[(y-(54-(face->glyph->metrics.horiBearingY/64)))*face->glyph->bitmap.width + x];
+				}
+			}
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, face->glyph->bitmap.width, 60, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmapa.data());
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+		bitmapa.clear();
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		m_Pages.find(60)->second.m_Glyphs.insert(std::make_pair(character, glyph));
+		return glyph;
+	}
 }
 
 void glui::Font::loadFromFile(const std::string& filename)
@@ -31,13 +80,19 @@ void glui::Font::loadFromFile(const std::string& filename)
 
 	m_Face = face;
 
-	FT_UShort currentSize = face->size->metrics.x_ppem;
+	setSize(60);
 
-	if(currentSize != 2000)
-		FT_Set_Pixel_Sizes(face, 0, 2000);
+	//FT_UShort currentSize = face->size->metrics.x_ppem;
 
+	//if(currentSize != 60)
+	//	FT_Set_Pixel_Sizes(face, 0, 60);
+
+	//m_Pages.insert(std::make_pair(60, Page()));
+
+	//*******************************************************************************************************************
+	/*
 	FT_UInt glyph_index;
-	glyph_index = FT_Get_Char_Index(face, 'a');
+	glyph_index = FT_Get_Char_Index(face, L'a');
 	if(FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) != 0)
 		std::cerr << "blah error" << std::endl;
 
@@ -52,18 +107,44 @@ void glui::Font::loadFromFile(const std::string& filename)
 
 	glGenTextures(1, &m_Tex);
 	glBindTexture(GL_TEXTURE_2D, m_Tex);
-	unsigned char* bitmapa = new unsigned char[face->glyph->bitmap.rows*face->glyph->bitmap.width*4];
-	memset(bitmapa, 255, face->glyph->bitmap.rows*face->glyph->bitmap.width*4);
+	unsigned char* bitmapa = new unsigned char[120*face->glyph->bitmap.width*4];
+	//memset(bitmapa, 0, sizeof(unsigned char)*120*face->glyph->bitmap.width*4);
 
-	for(int y = 0; y < face->glyph->bitmap.rows; ++y)
+	if(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY)
 	{
-		for(int x = 0; x < face->glyph->bitmap.width; ++x)
+		for(int y = face->glyph->metrics.vertBearingY/64; y < (face->glyph->metrics.vertBearingY/64)+face->glyph->bitmap.rows; ++y)
 		{
-			bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+3] = face->glyph->bitmap.buffer[y*face->glyph->bitmap.width + x];
+			for(int x = 0; x < face->glyph->bitmap.width; ++x)
+			{
+				bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+0] = 200;
+				bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+1] = 200;
+				bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+2] = 200;
+				bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+3] = face->glyph->bitmap.buffer[y*face->glyph->bitmap.width + x];
+			}
 		}
 	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmapa);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, face->glyph->bitmap.width, 120, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmapa);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+	delete[] bitmapa;
+
+	glBindTexture(GL_TEXTURE_2D, 0);*/
+}
+
+void glui::Font::setSize(int size)
+{
+	m_Size = size;
+	if(m_Pages.find(m_Size) == m_Pages.end())
+		m_Pages.insert(std::make_pair(m_Size, Page()));
+
+	FT_UShort currentSize = static_cast<FT_Face>(m_Face)->size->metrics.x_ppem;
+	if(currentSize != m_Size)
+		FT_Set_Pixel_Sizes(static_cast<FT_Face>(m_Face), 0, 60);
+}
+
+int glui::Font::getSize()
+{
+	return m_Size;
 }

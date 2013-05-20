@@ -51,9 +51,17 @@ void glui::Button::Draw()
 	glBindVertexArray(m_VAOID);
 
 	//_setVBO();
-	font.draw();
+	Vector2<GLfloat> pos = m_Position;
+	Font::Page::Glyph glyph;
 
+	glyph = font.getGlyph(L'P');
+	setSize(Vector2<GLfloat>(glyph.m_Width, 60));
+	glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
 	glDrawArrays(GL_QUADS, 0, 4);
+
+	setPosition(pos);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	/*std::array<GLfloat, 12> colors = {
 		0.8f, 0.8f, 0.8f,
