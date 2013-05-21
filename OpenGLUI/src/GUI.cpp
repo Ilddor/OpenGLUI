@@ -83,7 +83,7 @@ glui::GUI::GUI()
     NL "out vec4 out_Color;"
     NL "void main() {"
 	//NL "	if(tex_coord.x)"
-	NL "		out_Color = texture(color_texture, tex_coord);"
+	NL "		out_Color = texture(color_texture, tex_coord)+vec4(Color,0.0);"
 	//NL "	else"
 	//NL "		out_Color = vec4(Color, 1.0);"
     NL "}" NL;

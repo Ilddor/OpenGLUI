@@ -27,6 +27,7 @@ namespace glui
 		};
 
 		Page::Glyph getGlyph(unsigned long character);
+
 		void loadFromFile(const std::string& filename);
 
 		void setSize(int size);

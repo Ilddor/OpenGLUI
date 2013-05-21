@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(glm);$(glew_include);$(SolutionDir)OpenGLUI\include;$(SFML_include);$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Biblioteki\freetype2\lib;$(glew_lib);$(SOlutionDir)\Debug;$(SFML_lib);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(FreeType_lib);$(glew_lib);$(SOlutionDir)\Debug;$(SFML_lib);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

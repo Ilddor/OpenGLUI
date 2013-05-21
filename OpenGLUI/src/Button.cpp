@@ -14,10 +14,10 @@ void glui::Button::_setVBO()
 	};
 
 	std::array<GLfloat, 12> colors = {
-		0.5f, 0.5f, 0.5f,
-		0.5f, 0.5f, 0.5f,
-		0.3f, 0.3f, 0.3f,
-		0.3f, 0.3f, 0.3f
+		1.f, 1.f, 1.f,
+		1.f, 0.f, 0.f,
+		0.f, 1.f, 0.f,
+		0.f, 0.f, 1.f
 	};
 
 	std::array<GLfloat, 8> tex_coords = {
@@ -54,10 +54,45 @@ void glui::Button::Draw()
 	Vector2<GLfloat> pos = m_Position;
 	Font::Page::Glyph glyph;
 
-	glyph = font.getGlyph(L'P');
-	setSize(Vector2<GLfloat>(glyph.m_Width, 60));
-	glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
-	glDrawArrays(GL_QUADS, 0, 4);
+	std::wstring tekst = L"abcdefghijklmnopqrstuvwxyz"; 
+
+	for(auto it = tekst.begin(); it != tekst.end(); ++it)
+	{
+		if(it != tekst.begin())
+			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
+		glyph = font.getGlyph(*it);
+		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
+		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
+
+	setPosition(pos+Vector2<GLfloat>(0,80));
+
+	tekst = L"πÊÍ≥ÒÛúüø • £—”åèØ"; 
+
+	for(auto it = tekst.begin(); it != tekst.end(); ++it)
+	{
+		if(it != tekst.begin())
+			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
+		glyph = font.getGlyph(*it);
+		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
+		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
+
+	setPosition(pos+Vector2<GLfloat>(0,160));
+
+	tekst = L"ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+
+	for(auto it = tekst.begin(); it != tekst.end(); ++it)
+	{
+		if(it != tekst.begin())
+			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
+		glyph = font.getGlyph(*it);
+		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
+		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
+		glDrawArrays(GL_QUADS, 0, 4);
+	}
 
 	setPosition(pos);
 

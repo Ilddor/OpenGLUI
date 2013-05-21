@@ -19,8 +19,8 @@ int main()
 	gui.setViewMatrix(view);
 
 	glui::Button button;
-	button.setPosition(100.f, 50.f);
-	button.setSize(30.f, 60.f);
+	button.setPosition(10.f, 50.f);
+	button.setSize(30.f, 69.f);
 	button.setFunction([&](){
 		button.setPosition(10.f, 10.f);
 	});

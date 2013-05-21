@@ -34,24 +34,26 @@ glui::Font::Page::Glyph glui::Font::getGlyph(unsigned long character)
 			glyph.m_Width = face->glyph->bitmap.width;
 		//unsigned char* bitmapa = new unsigned char[120*face->glyph->bitmap.width*4];
 		std::vector<unsigned char> bitmapa;
-		bitmapa.resize(60*face->glyph->bitmap.width*4, 0);
+		bitmapa.resize(m_Height*face->glyph->bitmap.width*4, 0);
 		//memset(bitmapa, 0, sizeof(unsigned char)*120*face->glyph->bitmap.width*4);
+
+		int originY = face->size->metrics.ascender/64;
 
 		if(face->glyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY)
 		{
-			for(int y = 54-(face->glyph->metrics.horiBearingY/64); y < (54-(face->glyph->metrics.horiBearingY/64))+face->glyph->bitmap.rows; ++y)
+			for(int y = originY-(face->glyph->metrics.horiBearingY/64); y < (originY-(face->glyph->metrics.horiBearingY/64))+face->glyph->bitmap.rows; ++y)
 			{
 				for(int x = 0; x < face->glyph->bitmap.width; ++x)
 				{
-					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+0] = 200;
-					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+1] = 200;
-					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+2] = 200;
-					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+3] = face->glyph->bitmap.buffer[(y-(54-(face->glyph->metrics.horiBearingY/64)))*face->glyph->bitmap.width + x];
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+0] = 0;
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+1] = 0;
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+2] = 0;
+					bitmapa[(face->glyph->bitmap.width*4*y)+(x*4)+3] = face->glyph->bitmap.buffer[(y-(originY-(face->glyph->metrics.horiBearingY/64)))*face->glyph->bitmap.width + x];
 				}
 			}
 		}
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, face->glyph->bitmap.width, 60, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmapa.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, face->glyph->bitmap.width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, bitmapa.data());
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
@@ -59,7 +61,7 @@ glui::Font::Page::Glyph glui::Font::getGlyph(unsigned long character)
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		m_Pages.find(60)->second.m_Glyphs.insert(std::make_pair(character, glyph));
+		m_Pages.find(m_Size)->second.m_Glyphs.insert(std::make_pair(character, glyph));
 		return glyph;
 	}
 }
@@ -142,6 +144,8 @@ void glui::Font::setSize(int size)
 	FT_UShort currentSize = static_cast<FT_Face>(m_Face)->size->metrics.x_ppem;
 	if(currentSize != m_Size)
 		FT_Set_Pixel_Sizes(static_cast<FT_Face>(m_Face), 0, 60);
+
+	m_Height = static_cast<FT_Face>(m_Face)->size->metrics.height/64;
 }
 
 int glui::Font::getSize()
