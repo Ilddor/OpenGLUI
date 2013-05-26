@@ -50,8 +50,12 @@ void glui::Button::Draw()
 {
 	glBindVertexArray(m_VAOID);
 
+	glBindTexture(GL_TEXTURE_2D, m_tex);
+
+	glDrawArrays(GL_QUADS, 0, 4);
+
 	//_setVBO();
-	Vector2<GLfloat> pos = m_Position;
+	/*Vector2<GLfloat> pos = m_Position;
 	Font::Page::Glyph glyph;
 
 	std::wstring tekst = L"abcdefghijklmnopqrstuvwxyz"; 
@@ -60,7 +64,7 @@ void glui::Button::Draw()
 	{
 		if(it != tekst.begin())
 			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
-		glyph = font.getGlyph(*it);
+		glyph = font.getGlyph(*it,60);
 		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
 		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
 		glDrawArrays(GL_QUADS, 0, 4);
@@ -74,7 +78,7 @@ void glui::Button::Draw()
 	{
 		if(it != tekst.begin())
 			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
-		glyph = font.getGlyph(*it);
+		glyph = font.getGlyph(*it,60);
 		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
 		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
 		glDrawArrays(GL_QUADS, 0, 4);
@@ -88,7 +92,7 @@ void glui::Button::Draw()
 	{
 		if(it != tekst.begin())
 			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
-		glyph = font.getGlyph(*it);
+		glyph = font.getGlyph(*it,60);
 		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
 		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
 		glDrawArrays(GL_QUADS, 0, 4);
@@ -96,7 +100,7 @@ void glui::Button::Draw()
 
 	setPosition(pos);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);*/
 
 	/*std::array<GLfloat, 12> colors = {
 		0.8f, 0.8f, 0.8f,
@@ -108,8 +112,11 @@ void glui::Button::Draw()
 	glBindBuffer(GL_ARRAY_BUFFER, m_colors);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*colors.size(), colors.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);*/
+}
 
-	//glDrawArrays(GL_LINE_LOOP, 0, 4);
+bool glui::Button::isUsingTextures()
+{
+	return false;
 }
 
 void glui::Button::setFunction(std::function<void()> function)
@@ -141,16 +148,12 @@ glui::Button::Button()
 	m_colors = 0;
 	m_tex = 0;
 
-	GLuint cos = 0;
-
-	glGenVertexArrays(1, &cos);
+	glGenVertexArrays(1, &m_VAOID);
 	glBindVertexArray(m_VAOID);
 
 	glGenBuffers(1, &m_vertices);
 	glGenBuffers(1, &m_colors);
 	glGenBuffers(1, &m_tex);
-
-	font.loadFromFile("arial.ttf");
 
 	_setVBO();
 }
@@ -162,4 +165,6 @@ glui::Button::~Button()
 	glDeleteBuffers(1, &m_colors);
 	glDeleteBuffers(1, &m_tex);
 	glDeleteVertexArrays(1, &m_VAOID);
+
+	glDeleteTextures(1, &m_tex);
 }

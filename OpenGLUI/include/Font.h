@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <map>
 #include "../stdafx.h"
 
@@ -14,25 +15,22 @@ namespace glui
 		int		m_Size;
 		int		m_Height;	//real height that bitmap should have
 
-		GLuint m_Tex;
+		void _setSize(int size);
 	public:
 		struct Page
 		{
 			struct Glyph
 			{
-				GLuint			m_Texture;
-				unsigned int	m_Width;
+				std::vector<unsigned char>	m_Bytes;
+				unsigned int				m_Width;
+				unsigned int				m_Height;
 			};
 			std::map<unsigned int, Glyph> m_Glyphs;
 		};
 
-		Page::Glyph getGlyph(unsigned long character);
+		Page::Glyph getGlyph(unsigned long character, int size);
 
 		void loadFromFile(const std::string& filename);
-
-		void setSize(int size);
-
-		int getSize();
 
 	protected:
 		std::map<unsigned int, Page>	m_Pages;

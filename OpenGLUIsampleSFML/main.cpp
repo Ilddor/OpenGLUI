@@ -1,5 +1,6 @@
 #include <Gui.h>
 #include <Button.h>
+#include <Label.h>
 #include <SFML\Window.hpp>
 #include <gtc\matrix_transform.hpp>
 
@@ -20,12 +21,22 @@ int main()
 
 	glui::Button button;
 	button.setPosition(10.f, 50.f);
-	button.setSize(30.f, 69.f);
+	button.setSize(200.f, 50.f);
 	button.setFunction([&](){
 		button.setPosition(10.f, 10.f);
 	});
 
-	gui.AddControl(&button);
+	glui::Font font;
+	font.loadFromFile("arial.ttf");
+
+	glui::Label label;
+	label.setFont(&font);
+	label.setPosition(100.f, 100.f);
+	label.setSize(100.f, 25.f);
+	label.setText(L"Hello World");
+
+	gui.AddDrawableObject(&button);
+	gui.AddDrawableObject(&label);
 
 	sf::Event event;
 	while(window.isOpen())

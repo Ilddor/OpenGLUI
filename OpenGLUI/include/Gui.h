@@ -18,7 +18,9 @@ namespace glui
 		GLuint				m_VertexShader;
 		GLuint				m_FragmentShader;
 		GLuint				m_Program;
+		GLint				m_UsingTexturesUniform;
 
+		std::set<Drawable*>	m_Objects;
 		std::set<Control*>	m_Controls;
 		Control*			m_ControlWithFocus;
 
@@ -31,7 +33,7 @@ namespace glui
 	public:
 		void Draw();
 
-		void AddControl(Control* control);
+		void AddDrawableObject(Drawable* object);
 
 		void setProjectionMatrix(glm::mat4 projection);
 		void setViewMatrix(glm::mat4 view);

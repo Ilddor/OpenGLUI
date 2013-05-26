@@ -20,16 +20,20 @@ void glui::GUI::Draw()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_ALPHA_TEST);
 	glUseProgram(m_Program);
-	for(auto it: m_Controls)
+	for(auto it: m_Objects)
 	{
+		glUniform1f(m_UsingTexturesUniform, it->isUsingTextures()? 1.f: 0.f);
 		it->Draw();
 	}
 	glUseProgram(0);
 }
 
-void glui::GUI::AddControl(Control* control)
+void glui::GUI::AddDrawableObject(Drawable* object)
 {
-	m_Controls.insert(control);
+	m_Objects.insert(object);
+	Control* control = dynamic_cast<Control*>(object);
+	if(control)
+		m_Controls.insert(control);
 }
 
 void glui::GUI::setProjectionMatrix(glm::mat4 projection)
@@ -80,12 +84,14 @@ glui::GUI::GUI()
 	NL "in vec3 Color;"
 	NL "in vec2 tex_coord;"
 	NL "uniform sampler2D color_texture;"
+	NL "uniform float using_texture;"
     NL "out vec4 out_Color;"
     NL "void main() {"
-	//NL "	if(tex_coord.x)"
-	NL "		out_Color = texture(color_texture, tex_coord)+vec4(Color,0.0);"
-	//NL "	else"
-	//NL "		out_Color = vec4(Color, 1.0);"
+	NL "		out_Color = mix(vec4(Color,1.0), texture(color_texture, tex_coord), using_texture);"
+	//NL "		if(texture(color_texture, tex_coord).r != 0)"
+	//NL "			out_Color = texture(color_texture, tex_coord)*vec4(Color,1.0);"
+	//NL "		else"
+	//NL "			out_Color = vec4(Color,1.0);"
     NL "}" NL;
 
 	m_VertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -152,6 +158,9 @@ glui::GUI::GUI()
 	GLint tex_location = glGetUniformLocation(m_Program, "color_texture");
 	std::cout << tex_location << std::endl;
 	glUniform1i(tex_location, 0);
+
+	m_UsingTexturesUniform = glGetUniformLocation(m_Program, "using_texture");
+	//glUniform1f(m_UsingTexturesUniform, 0.f);
 }
 
 
