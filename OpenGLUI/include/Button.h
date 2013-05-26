@@ -1,9 +1,9 @@
 #pragma once
 #include "..\stdafx.h"
 #include <functional>
-#include "Control.h"
 
-#include "Font.h"
+#include "Control.h"
+#include "Label.h"
 
 namespace glui
 {
@@ -15,6 +15,8 @@ namespace glui
 		GLuint					m_vertices;
 		GLuint					m_colors;
 		GLuint					m_tex;
+
+		//Label					m_Label;
 
 		std::function<void()>	m_Function;
 

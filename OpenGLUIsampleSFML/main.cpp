@@ -32,8 +32,9 @@ int main()
 	glui::Label label;
 	label.setFont(&font);
 	label.setPosition(100.f, 100.f);
-	label.setSize(100.f, 25.f);
+	//label.setSize(400.f, 50.f);	//when you set font size after setting text... omg that's stupid FIXIT
 	label.setText(L"Hello World");
+	label.setFontSize(50);
 
 	gui.AddDrawableObject(&button);
 	gui.AddDrawableObject(&label);

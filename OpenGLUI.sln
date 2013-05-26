@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLUI", "OpenGLUI\OpenGLUI.vcxproj", "{85A720F5-2F20-46A1-9187-98ACFC78153B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLUIsampleSFML", "OpenGLUIsampleSFML\OpenGLUIsampleSFML.vcxproj", "{09B27F48-C2C2-4D3D-8C0C-F25766EE2625}"
+	ProjectSection(ProjectDependencies) = postProject
+		{85A720F5-2F20-46A1-9187-98ACFC78153B} = {85A720F5-2F20-46A1-9187-98ACFC78153B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

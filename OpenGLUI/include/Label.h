@@ -30,6 +30,8 @@ namespace glui
 		void setText(const std::wstring& text);
 		void setFont(Font* font);
 		void setFontSize(int size);
+		void setSize(const GLfloat width, GLfloat height);
+		void setSize(const Vector2<GLfloat> size);
 
 		std::wstring getText();
 

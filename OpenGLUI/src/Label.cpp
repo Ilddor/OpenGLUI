@@ -44,9 +44,6 @@ void glui::Label::_setVBO()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	if(m_Texture == 0)
-		glGenTextures(1, &m_Texture);
-
 	if(m_Font != nullptr && !m_Text.empty())
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Texture);
@@ -56,7 +53,7 @@ void glui::Label::_setVBO()
 		for(auto character: m_Text)
 		{
 			glyph = m_Font->getGlyph(character, m_FontSize);
-			x += glyph.m_Width;
+			x += glyph.m_Width+2;	//2 is for offset between characters
 		}
 		y = glyph.m_Height;
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -67,7 +64,7 @@ void glui::Label::_setVBO()
 		{
 			glyph = m_Font->getGlyph(character, m_FontSize);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, glyph.m_Width, glyph.m_Height, GL_RGBA, GL_UNSIGNED_BYTE, glyph.m_Bytes.data());
-			x += glyph.m_Width;
+			x += glyph.m_Width+2;
 		}
 	}
 }
@@ -101,6 +98,11 @@ void glui::Label::setFont(Font* font)
 void glui::Label::setFontSize(int size)
 {
 	m_FontSize = size;
+	GLfloat width, height;
+	glBindTexture(GL_TEXTURE_2D, m_Texture);
+	glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+	glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+	m_Size = Vector2<GLfloat>(width, height);
 	_setVBO();
 }
 
