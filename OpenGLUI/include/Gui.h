@@ -2,7 +2,7 @@
 
 #include "../stdafx.h"
 
-#include <set>
+#include <list>
 #include <memory>
 
 #include "Control.h"
@@ -20,8 +20,8 @@ namespace glui
 		GLuint				m_Program;
 		GLint				m_UsingTexturesUniform;
 
-		std::set<Drawable*>	m_Objects;
-		std::set<Control*>	m_Controls;
+		std::list<Drawable*>	m_Objects;
+		std::list<Control*>	m_Controls;
 		Control*			m_ControlWithFocus;
 
 		glm::mat4			m_Projection;

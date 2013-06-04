@@ -19,20 +19,21 @@ int main()
 	gui.setProjectionMatrix(projection);
 	gui.setViewMatrix(view);
 
+	glui::Font font;
+	font.loadFromFile("arial.ttf");
+
 	glui::Button button;
 	button.setPosition(10.f, 50.f);
 	button.setSize(200.f, 50.f);
+	button.setCaption(L"Lool");
+	button.setFont(&font);
 	button.setFunction([&](){
 		button.setPosition(10.f, 10.f);
 	});
 
-	glui::Font font;
-	font.loadFromFile("arial.ttf");
-
 	glui::Label label;
 	label.setFont(&font);
 	label.setPosition(100.f, 100.f);
-	//label.setSize(400.f, 50.f);	//when you set font size after setting text... omg that's stupid FIXIT
 	label.setText(L"Hello World");
 	label.setFontSize(50);
 

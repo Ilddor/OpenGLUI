@@ -20,6 +20,7 @@ namespace glui
 		std::wstring	m_Text;
 		Font*			m_Font;
 		int				m_FontSize;
+		bool			m_AutoSize;
 
 		void _setVBO();
 	public:
@@ -30,8 +31,7 @@ namespace glui
 		void setText(const std::wstring& text);
 		void setFont(Font* font);
 		void setFontSize(int size);
-		void setSize(const GLfloat width, GLfloat height);
-		void setSize(const Vector2<GLfloat> size);
+		void setAutoSize(bool value);
 
 		std::wstring getText();
 

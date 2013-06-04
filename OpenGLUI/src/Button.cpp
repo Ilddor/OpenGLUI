@@ -6,6 +6,8 @@
 
 void glui::Button::_setVBO()
 {
+	glBindVertexArray(m_VAOID);
+
 	std::array<GLfloat, 8> verticesBackground = {
 		m_Position.X, m_Position.Y,
 		m_Position.X+m_Size.X, m_Position.Y,
@@ -29,21 +31,34 @@ void glui::Button::_setVBO()
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*verticesBackground.size(), verticesBackground.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*verticesBackground.size(), verticesBackground.data(), GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_colors);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*colors.size(), colors.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*colors.size(), colors.data(), GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_tex);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*tex_coords.size(), tex_coords.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*tex_coords.size(), tex_coords.data(), GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
+
+	Vector2<GLfloat> tmp = m_Position;
+	tmp += Vector2<GLfloat>(2.f,2.f);
+
+	m_Label.setPosition(tmp);
+
+	tmp = m_Size;
+	tmp -= Vector2<GLfloat>(4.f,4.f);
+
+	m_Label.setSize(tmp);
+	m_Label.setFontSize(m_Size.Y);
 }
 
 void glui::Button::Draw()
@@ -54,64 +69,14 @@ void glui::Button::Draw()
 
 	glDrawArrays(GL_QUADS, 0, 4);
 
-	//_setVBO();
-	/*Vector2<GLfloat> pos = m_Position;
-	Font::Page::Glyph glyph;
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	std::wstring tekst = L"abcdefghijklmnopqrstuvwxyz"; 
+	glBindVertexArray(0);
 
-	for(auto it = tekst.begin(); it != tekst.end(); ++it)
-	{
-		if(it != tekst.begin())
-			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
-		glyph = font.getGlyph(*it,60);
-		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
-		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
-		glDrawArrays(GL_QUADS, 0, 4);
-	}
+	//glFlush();
 
-	setPosition(pos+Vector2<GLfloat>(0,80));
-
-	tekst = L"πÊÍ≥ÒÛúüø • £—”åèØ"; 
-
-	for(auto it = tekst.begin(); it != tekst.end(); ++it)
-	{
-		if(it != tekst.begin())
-			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
-		glyph = font.getGlyph(*it,60);
-		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
-		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
-		glDrawArrays(GL_QUADS, 0, 4);
-	}
-
-	setPosition(pos+Vector2<GLfloat>(0,160));
-
-	tekst = L"ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
-
-	for(auto it = tekst.begin(); it != tekst.end(); ++it)
-	{
-		if(it != tekst.begin())
-			setPosition(m_Position+Vector2<GLfloat>(glyph.m_Width,0));
-		glyph = font.getGlyph(*it,60);
-		setSize(Vector2<GLfloat>(glyph.m_Width, 69));
-		glBindTexture(GL_TEXTURE_2D, glyph.m_Texture);
-		glDrawArrays(GL_QUADS, 0, 4);
-	}
-
-	setPosition(pos);
-
-	glBindTexture(GL_TEXTURE_2D, 0);*/
-
-	/*std::array<GLfloat, 12> colors = {
-		0.8f, 0.8f, 0.8f,
-		0.2f, 0.2f, 0.2f,
-		0.2f, 0.2f, 0.2f,
-		0.2f, 0.2f, 0.2f
-	};
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_colors);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*colors.size(), colors.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);*/
+	glUniform1f(2, 1.f);	//FIXME: change it to automatic -.-
+	m_Label.Draw();
 }
 
 bool glui::Button::isUsingTextures()
@@ -122,6 +87,16 @@ bool glui::Button::isUsingTextures()
 void glui::Button::setFunction(std::function<void()> function)
 {
 	m_Function = function;
+}
+
+void glui::Button::setCaption(const std::wstring& caption)
+{
+	m_Label.setText(caption);
+}
+
+void glui::Button::setFont(Font* font)
+{
+	m_Label.setFont(font);
 }
 
 bool glui::Button::MousePress(int x, int y)
@@ -148,12 +123,16 @@ glui::Button::Button()
 	m_colors = 0;
 	m_tex = 0;
 
+	m_Label.setAutoSize(false);
+
 	glGenVertexArrays(1, &m_VAOID);
 	glBindVertexArray(m_VAOID);
 
 	glGenBuffers(1, &m_vertices);
 	glGenBuffers(1, &m_colors);
 	glGenBuffers(1, &m_tex);
+
+	glBindVertexArray(0);
 
 	_setVBO();
 }

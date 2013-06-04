@@ -1,6 +1,7 @@
 #pragma once
 #include "..\stdafx.h"
 #include <functional>
+#include <string>
 
 #include "Control.h"
 #include "Label.h"
@@ -16,7 +17,7 @@ namespace glui
 		GLuint					m_colors;
 		GLuint					m_tex;
 
-		//Label					m_Label;
+		Label					m_Label;
 
 		std::function<void()>	m_Function;
 
@@ -27,6 +28,8 @@ namespace glui
 		bool isUsingTextures();
 
 		void setFunction(std::function<void()> function);
+		void setCaption(const std::wstring& caption);
+		void setFont(Font* font);
 
 		bool MousePress(int x, int y);
 		bool MouseRelease(int x, int y);

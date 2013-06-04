@@ -5,6 +5,43 @@
 
 void glui::Label::_setVBO()
 {
+	glBindVertexArray(m_VAOID);
+
+	if(m_Font != nullptr && !m_Text.empty())
+	{
+		glBindTexture(GL_TEXTURE_2D, m_Texture);
+		int x = 0;
+		int y = 0;
+		Font::Page::Glyph glyph;
+		for(auto character: m_Text)
+		{
+			glyph = m_Font->getGlyph(character, m_FontSize);
+			x += glyph.m_Width+2;	//2 is for offset between characters
+		}
+		y = glyph.m_Height;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		x = 0;
+		for(auto character: m_Text)
+		{
+			glyph = m_Font->getGlyph(character, m_FontSize);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, glyph.m_Width, glyph.m_Height, GL_RGBA, GL_UNSIGNED_BYTE, glyph.m_Bytes.data());
+			x += glyph.m_Width+2;
+		}
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	if(m_AutoSize)
+	{
+		GLfloat width, height;
+		glBindTexture(GL_TEXTURE_2D, m_Texture);
+		glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
+		glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
+		m_Size = Vector2<GLfloat>(width, height);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	std::array<GLfloat, 8> verticesBackground = {
 		m_Position.X, m_Position.Y,
 		m_Position.X+m_Size.X, m_Position.Y,
@@ -13,10 +50,10 @@ void glui::Label::_setVBO()
 	};
 
 	std::array<GLfloat, 12> colors = {
-		1.f, 1.f, 1.f,
-		1.f, 0.f, 0.f,
+		1.f, 1.f, 0.f,
 		0.f, 1.f, 0.f,
-		0.f, 0.f, 1.f
+		0.f, 0.f, 1.f,
+		1.f, 0.f, 0.f
 	};
 
 	std::array<GLfloat, 8> tex_coords = {
@@ -44,29 +81,7 @@ void glui::Label::_setVBO()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	if(m_Font != nullptr && !m_Text.empty())
-	{
-		glBindTexture(GL_TEXTURE_2D, m_Texture);
-		int x = 0;
-		int y = 0;
-		Font::Page::Glyph glyph;
-		for(auto character: m_Text)
-		{
-			glyph = m_Font->getGlyph(character, m_FontSize);
-			x += glyph.m_Width+2;	//2 is for offset between characters
-		}
-		y = glyph.m_Height;
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-		x = 0;
-		for(auto character: m_Text)
-		{
-			glyph = m_Font->getGlyph(character, m_FontSize);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, glyph.m_Width, glyph.m_Height, GL_RGBA, GL_UNSIGNED_BYTE, glyph.m_Bytes.data());
-			x += glyph.m_Width+2;
-		}
-	}
+	glBindVertexArray(0);
 }
 
 void glui::Label::Draw()
@@ -76,6 +91,10 @@ void glui::Label::Draw()
 	glBindTexture(GL_TEXTURE_2D, m_Texture);
 
 	glDrawArrays(GL_QUADS, 0, 4);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindVertexArray(0);
 }
 
 bool glui::Label::isUsingTextures()
@@ -98,12 +117,12 @@ void glui::Label::setFont(Font* font)
 void glui::Label::setFontSize(int size)
 {
 	m_FontSize = size;
-	GLfloat width, height;
-	glBindTexture(GL_TEXTURE_2D, m_Texture);
-	glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &width);
-	glGetTexLevelParameterfv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &height);
-	m_Size = Vector2<GLfloat>(width, height);
 	_setVBO();
+}
+
+void glui::Label::setAutoSize(bool value)
+{
+	m_AutoSize = value;
 }
 
 std::wstring glui::Label::getText()
@@ -119,6 +138,7 @@ glui::Label::Label()
 	m_TextureCoords = 0;
 	m_FontSize = 30;
 	m_Font = nullptr;
+	m_AutoSize = true;
 
 	glGenVertexArrays(1, &m_VAOID);
 	glBindVertexArray(m_VAOID);
@@ -128,6 +148,8 @@ glui::Label::Label()
 	glGenBuffers(1, &m_TextureCoords);
 
 	glGenTextures(1, &m_Texture);
+
+	glBindVertexArray(0);
 
 	_setVBO();
 }

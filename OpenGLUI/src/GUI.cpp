@@ -30,10 +30,10 @@ void glui::GUI::Draw()
 
 void glui::GUI::AddDrawableObject(Drawable* object)
 {
-	m_Objects.insert(object);
+	m_Objects.push_back(object);
 	Control* control = dynamic_cast<Control*>(object);
 	if(control)
-		m_Controls.insert(control);
+		m_Controls.push_back(control);
 }
 
 void glui::GUI::setProjectionMatrix(glm::mat4 projection)
@@ -160,6 +160,7 @@ glui::GUI::GUI()
 	glUniform1i(tex_location, 0);
 
 	m_UsingTexturesUniform = glGetUniformLocation(m_Program, "using_texture");
+	std::cout << m_UsingTexturesUniform << std::endl;
 	//glUniform1f(m_UsingTexturesUniform, 0.f);
 }
 
